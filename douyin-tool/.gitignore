@@ -1,0 +1,9 @@
+.venv/
+node_modules/
+.shots/
+server/data/
+server/config.json
+__pycache__/
+*.pyc
+upstream/
+.DS_Store

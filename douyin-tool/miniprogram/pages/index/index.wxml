@@ -1,0 +1,141 @@
+<view class="page">
+  <!-- 顶部渐变区 -->
+  <view class="hero" style="padding-top:{{navTop}}px">
+    <view class="hero-light l1"></view>
+    <view class="hero-light l2"></view>
+    <view class="hero-grid"></view>
+
+    <view class="hero-top">
+      <view class="brand">
+        <view class="logo"><view class="ic ic-sparkle-w"></view></view>
+        <text class="brand-name">短视频提取</text>
+      </view>
+      <view class="nav-actions">
+        <view class="nav-btn" bindtap="goHistory">
+          <view class="ic ic-clock-w nav-ic"></view>
+          <text>记录</text>
+        </view>
+        <view class="nav-btn" bindtap="goMine">
+          <view class="ic ic-user-w nav-ic"></view>
+          <text>我的</text>
+        </view>
+      </view>
+    </view>
+
+    <view class="hero-title">提取<text class="hl">无水印</text>原片</view>
+    <view class="hero-sub">复制抖音分享链接，粘贴后一键存进相册</view>
+    <view class="hero-tags">
+      <view class="tag">视频</view>
+      <view class="tag">图集</view>
+      <view class="tag">原声</view>
+      <view class="tag">封面</view>
+    </view>
+  </view>
+
+  <!-- 输入卡片 -->
+  <view class="panel card">
+    <view class="panel-head">
+      <text class="panel-title">粘贴分享链接</text>
+      <text class="panel-hint">支持整段分享文案</text>
+    </view>
+
+    <view class="paste-box">
+      <textarea
+        class="paste-input"
+        value="{{text}}"
+        placeholder="把抖音复制的分享文案粘贴到这里…"
+        placeholder-class="ph"
+        maxlength="{{maxLen}}"
+        auto-height
+        show-confirm-bar="{{false}}"
+        bindinput="onInput"
+        bindconfirm="onParse"
+      ></textarea>
+
+      <view class="paste-tools">
+        <view class="tool" bindtap="onPaste">
+          <view class="ic ic-paste-b tool-ic"></view>
+          <text>一键粘贴</text>
+        </view>
+        <view class="tool ghost" wx:if="{{text}}" bindtap="onClear">清空</view>
+        <text class="counter">{{len}}/{{maxLen}}</text>
+      </view>
+    </view>
+
+    <view class="btn btn-primary main-btn" bindtap="onParse">
+      <view wx:if="{{loading}}" class="spinner"></view>
+      <text>{{loading ? loadingText : '开始提取'}}</text>
+      <view wx:if="{{!loading}}" class="ic ic-arrow-w main-arrow"></view>
+    </view>
+
+    <view class="quota-line" bindtap="onQuotaTap">
+      <view class="ic ic-fire-b quota-ic"></view>
+      <block wx:if="{{quota.remain > 0}}">
+        <text>今日还可提取 <text class="strong">{{quota.remain}}</text> 次</text>
+      </block>
+      <block wx:else>
+        <text class="warn-text">今日次数已用完</text>
+      </block>
+      <text class="quota-link">看视频加次数</text>
+    </view>
+  </view>
+
+  <!-- 公告 -->
+  <view class="notice" wx:if="{{notice}}">
+    <view class="notice-bar"></view>
+    <text class="notice-text">{{notice}}</text>
+  </view>
+
+  <!-- 三步 -->
+  <view class="steps card">
+    <view class="step" wx:for="{{steps}}" wx:key="icon">
+      <view class="step-icon"><view class="ic ic-{{item.icon}}-b step-ic"></view></view>
+      <view class="step-title">{{item.title}}</view>
+      <view class="step-desc">{{item.desc}}</view>
+    </view>
+  </view>
+
+  <!-- 最近 -->
+  <view class="recent" wx:if="{{history.length}}">
+    <view class="recent-head">
+      <text class="recent-title">最近提取</text>
+      <view class="recent-more" bindtap="goHistory">
+        <text>全部</text>
+        <view class="ic ic-arrow-m more-ic"></view>
+      </view>
+    </view>
+    <scroll-view class="recent-scroll" scroll-x enable-flex show-scrollbar="{{false}}">
+      <view
+        class="recent-item"
+        wx:for="{{history}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="openHistory"
+      >
+        <view class="cover-wrap">
+          <image class="recent-cover" src="{{item.cover}}" mode="aspectFill" lazy-load />
+          <view class="recent-badge" wx:if="{{item.kind === 'images'}}">图集</view>
+          <view class="recent-dur" wx:else>{{item.durText}}</view>
+          <view class="cover-mask"></view>
+        </view>
+        <view class="recent-name">{{item.title || '无标题'}}</view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <ad-banner gap="16" />
+
+  <view class="footer">
+    <view class="footer-line">仅用于个人学习与备份，请尊重原作者版权</view>
+    <view class="footer-link" bindtap="goHelp">使用帮助与免责声明</view>
+  </view>
+</view>
+
+<!-- 解析中遮罩 -->
+<view class="mask" wx:if="{{loading}}">
+  <view class="mask-card">
+    <view class="mask-ring"></view>
+    <view class="mask-text">{{loadingText}}</view>
+    <view class="mask-tip">正在读取原片地址，通常 1 秒内完成</view>
+  </view>
+</view>

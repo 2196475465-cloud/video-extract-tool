@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#4E6EF2">
+<title>短视频提取 · 无水印原片下载</title>
+<style>
+  :root{
+    --brand:#4E6EF2; --brand-2:#8A6BFF;
+    --hero:linear-gradient(160deg,#3D5BEF 0%,#5B7CFA 46%,#8A6BFF 100%);
+    --bg:#F4F5F9; --card:#fff; --text:#15171C; --text-2:#4A4F5C;
+    --sub:#8A8F9C; --sub-2:#B0B5C1; --line:#EEF0F5; --fill:#F6F7FA;
+    --ok:#0AA06E; --warn:#E0523D; --gold:#F0A020; --gold-soft:#FFF8E8;
+    --r-lg:22px; --r-md:16px; --r-sm:12px;
+    --shadow-1:0 4px 16px rgba(23,26,31,.04);
+    --shadow-2:0 16px 40px rgba(23,26,31,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg); color:var(--text);
+    font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  textarea{font:inherit}
+  img,video{display:block;max-width:100%}
+  .hidden{display:none !important}
+
+  .wrap{max-width:640px;margin:0 auto;padding-bottom:40px}
+
+  /* ---------- 顶部 ---------- */
+  .hero{
+    position:relative;overflow:hidden;
+    padding:26px 24px 92px;
+    background:var(--hero);
+    border-bottom-left-radius:28px;border-bottom-right-radius:28px;
+    color:#fff;
+  }
+  .hero::before{
+    content:"";position:absolute;width:320px;height:320px;border-radius:50%;
+    top:-150px;right:-100px;
+    background:radial-gradient(circle,rgba(255,255,255,.3) 0%,rgba(255,255,255,0) 68%);
+  }
+  .hero-top{display:flex;align-items:center;justify-content:space-between;position:relative}
+  .brand{display:flex;align-items:center;font-weight:600;letter-spacing:.5px}
+  .logo{
+    width:28px;height:28px;border-radius:9px;margin-right:8px;
+    background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.25);
+    display:flex;align-items:center;justify-content:center;font-size:13px;
+  }
+  .top-link{
+    font-size:12px;padding:6px 12px;border-radius:999px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.16);
+    color:#fff;text-decoration:none;
+  }
+  .hero h1{position:relative;margin-top:28px;font-size:31px;line-height:1.2;letter-spacing:-.5px}
+  .hero h1 em{font-style:normal;color:#FFD887}
+  .hero p{position:relative;margin-top:9px;font-size:13.5px;color:rgba(255,255,255,.82)}
+  .tags{position:relative;display:flex;gap:6px;margin-top:15px;flex-wrap:wrap}
+  .tags span{
+    font-size:11.5px;padding:3px 10px;border-radius:999px;
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.12);
+  }
+
+  /* ---------- 卡片 ---------- */
+  .card{
+    background:var(--card);border-radius:var(--r-lg);
+    box-shadow:var(--shadow-1);
+  }
+  .panel{
+    position:relative;margin:-64px 16px 0;padding:18px;
+    border-radius:20px;box-shadow:0 20px 50px rgba(30,40,90,.1);
+  }
+  .panel-head{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+  .panel-head b{font-size:13.5px;font-weight:600}
+  .panel-head i{font-style:normal;font-size:11px;color:var(--sub-2)}
+
+  .box{background:var(--fill);border:1px solid #EEF0F6;border-radius:14px;padding:12px 12px 10px}
+  #input{
+    width:100%;min-height:84px;border:none;background:transparent;resize:vertical;
+    color:var(--text);line-height:1.7;outline:none;
+  }
+  #input::placeholder{color:#B6BBC7}
+  .tools{display:flex;align-items:center;gap:8px;padding-top:9px;border-top:1px dashed #E5E8F0}
+  .tools .t{
+    display:flex;align-items:center;gap:5px;
+    height:28px;padding:0 11px;border-radius:999px;
+    background:#fff;box-shadow:0 2px 8px rgba(23,26,31,.05);
+    color:var(--brand);font-size:12px;font-weight:500;
+  }
+  .tools .t.ghost{background:transparent;box-shadow:none;color:var(--sub);padding:0 4px}
+  .tools .count{margin-left:auto;font-size:11px;color:var(--sub-2)}
+
+  .btn{
+    display:flex;align-items:center;justify-content:center;gap:7px;
+    width:100%;height:50px;border-radius:13px;font-size:15px;font-weight:600;
+    transition:transform .12s,opacity .12s;
+  }
+  .btn:active{transform:scale(.985);opacity:.92}
+  a.btn{text-decoration:none}
+  .btn.primary{background:linear-gradient(135deg,var(--brand),var(--brand-2));color:#fff;box-shadow:0 12px 26px rgba(78,110,242,.26)}
+  .btn.soft{background:var(--fill);color:var(--text-2)}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  #go{margin-top:13px}
+
+  .spinner{
+    width:15px;height:15px;border-radius:50%;
+    border:2px solid rgba(255,255,255,.45);border-top-color:#fff;
+    animation:spin .8s linear infinite;
+  }
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- 结果 ---------- */
+  .result{margin:16px 16px 0;padding:16px}
+  .media{
+    position:relative;border-radius:16px;overflow:hidden;background:#0E1116;
+    box-shadow:0 16px 40px rgba(20,25,60,.16);
+  }
+  .media video{width:100%;max-height:60vh;background:#0E1116}
+  .badge{
+    position:absolute;top:10px;left:10px;z-index:2;
+    display:flex;align-items:center;gap:5px;
+    padding:4px 10px;border-radius:999px;
+    background:rgba(10,160,110,.92);color:#fff;font-size:11px;
+  }
+  .badge::before{content:"";width:5px;height:5px;border-radius:50%;background:#fff}
+  .info{padding:14px 2px 0}
+  .title{font-size:15.5px;font-weight:600;line-height:1.55}
+  .meta{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:12px;color:var(--sub);flex-wrap:wrap}
+  .chip{background:var(--fill);border-radius:7px;padding:2px 8px;font-size:11px;color:var(--sub)}
+  .author{display:flex;align-items:center;gap:6px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--sub)}
+  .avatar{width:22px;height:22px;border-radius:50%;background:#E9ECF3;object-fit:cover}
+
+  .dl{margin-top:14px}
+  .dl-row{display:flex;gap:8px;margin-top:8px}
+  .dl-row .btn{height:42px;font-size:13px;border-radius:11px;flex:1}
+  .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:10px}
+  .gallery img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;cursor:zoom-in}
+
+  .note{
+    display:flex;gap:8px;margin-top:12px;padding:9px 11px;border-radius:11px;
+    background:var(--gold-soft);color:#8A6212;font-size:11.5px;line-height:1.6;
+  }
+  .note::before{content:"";flex:none;width:3px;border-radius:2px;background:var(--gold);margin:2px 0}
+
+  /* ---------- 步骤 / 历史 ---------- */
+  .steps{display:flex;margin:16px 16px 0;padding:18px 6px;text-align:center}
+  .step{flex:1;padding:0 4px}
+  .step .n{
+    width:38px;height:38px;margin:0 auto 8px;border-radius:13px;
+    background:rgba(78,110,242,.08);color:var(--brand);
+    display:flex;align-items:center;justify-content:center;font-weight:600;font-size:14px;
+  }
+  .step b{display:block;font-size:12.5px;font-weight:600}
+  .step span{display:block;font-size:11px;color:var(--sub);margin-top:2px}
+
+  .history{margin:18px 16px 0}
+  .history-head{display:flex;align-items:center;justify-content:space-between;padding:0 4px 8px;font-size:13px;font-weight:600}
+  .history-head button{font-size:11.5px;color:var(--sub)}
+  .hlist{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
+  .hlist::-webkit-scrollbar{display:none}
+  .hitem{flex:none;width:86px;cursor:pointer}
+  .hitem img{width:86px;height:114px;object-fit:cover;border-radius:10px;background:#EDEFF4}
+  .hitem p{font-size:11px;color:var(--text-2);margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  .ad-slot{
+    margin:18px 16px 0;padding:12px;border-radius:12px;
+    border:1px dashed #DDE1EA;color:#B0B5C1;font-size:11px;text-align:center;
+  }
+
+  footer{padding:26px 24px 10px;text-align:center;font-size:11px;color:#A9AEBA;line-height:1.9}
+  footer a{color:var(--brand);text-decoration:none}
+
+  .toast{
+    position:fixed;left:50%;bottom:26px;transform:translate(-50%,10px);
+    background:rgba(20,22,28,.92);color:#fff;font-size:12.5px;
+    padding:9px 16px;border-radius:999px;opacity:0;pointer-events:none;
+    transition:.22s;z-index:99;max-width:80vw;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translate(-50%,0)}
+
+  /* ---------- 桌面端 ---------- */
+  @media (min-width:760px){
+    body{padding:24px 0}
+    .wrap{
+      max-width:720px;border-radius:24px;overflow:hidden;
+      box-shadow:0 30px 80px rgba(23,26,31,.12);background:var(--bg);
+    }
+    .hero{padding:28px 36px 100px}
+    .hero h1{font-size:38px}
+    .panel,.result,.steps,.history,.ad-slot{margin-left:24px;margin-right:24px}
+    .panel{margin-top:-72px;padding:22px}
+    .info{padding:16px 4px 0}
+    .title{font-size:17px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-top">
+      <div class="brand"><div class="logo">提</div>短视频提取</div>
+      <a class="top-link" href="/admin" target="_blank" rel="noopener">后台</a>
+    </div>
+    <h1>提取<em>无水印</em>原片</h1>
+    <p>复制抖音分享链接，粘贴后一键下载到本地</p>
+    <div class="tags"><span>视频</span><span>图集</span><span>原声</span><span>封面</span></div>
+  </header>
+
+  <section class="panel card">
+    <div class="panel-head"><b>粘贴分享链接</b><i>支持整段分享文案</i></div>
+    <div class="box">
+      <textarea id="input" maxlength="600" placeholder="把抖音复制的分享文案粘贴到这里…"></textarea>
+      <div class="tools">
+        <button class="t" id="paste">＋ 一键粘贴</button>
+        <button class="t ghost hidden" id="clear">清空</button>
+        <span class="count"><span id="len">0</span>/600</span>
+      </div>
+    </div>
+    <button class="btn primary" id="go"><span>开始提取</span></button>
+  </section>
+
+  <section class="result card hidden" id="result"></section>
+
+  <section class="steps card">
+    <div class="step"><div class="n">1</div><b>复制链接</b><span>抖音点分享</span></div>
+    <div class="step"><div class="n">2</div><b>粘贴提取</b><span>自动识别链接</span></div>
+    <div class="step"><div class="n">3</div><b>下载原片</b><span>存到本地</span></div>
+  </section>
+
+  <section class="history hidden" id="history">
+    <div class="history-head"><span>最近提取</span><button id="clearHis">清空</button></div>
+    <div class="hlist" id="hlist"></div>
+  </section>
+
+  <div class="ad-slot">广告位（接入联盟广告后显示）</div>
+
+  <footer>
+    本工具仅做链接解析与文件下载，不存储、不分发任何视频内容。<br>
+    请仅用于个人学习与备份，视频版权归原作者所有。
+  </footer>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var input = $('input'), goBtn = $('go');
+  var resultEl = $('result'), hisEl = $('history'), hlistEl = $('hlist');
+  var current = null;
+  var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+  function toast(msg, ms) {
+    var t = $('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(t._timer);
+    t._timer = setTimeout(function () { t.classList.remove('show'); }, ms || 1800);
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function withDownload(url) {
+    return url + (url.indexOf('?') >= 0 ? '&' : '?') + 'd=1';
+  }
+
+  function fmtNum(n) {
+    n = +n || 0;
+    if (n >= 1e8) return (n / 1e8).toFixed(1).replace(/\.0$/, '') + '亿';
+    if (n >= 1e4) return (n / 1e4).toFixed(1).replace(/\.0$/, '') + '万';
+    return String(n);
+  }
+
+  function fmtDur(ms) {
+    var s = Math.round((+ms || 0) / 1000);
+    return Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0');
+  }
+
+  /* ---------- 输入 ---------- */
+  input.addEventListener('input', function () {
+    $('len').textContent = input.value.length;
+    $('clear').classList.toggle('hidden', !input.value);
+  });
+
+  $('clear').addEventListener('click', function () {
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+    input.focus();
+  });
+
+  $('paste').addEventListener('click', async function () {
+    try {
+      var text = await navigator.clipboard.readText();
+      if (!text.trim()) { toast('剪贴板是空的'); return; }
+      input.value = text.trim();
+      input.dispatchEvent(new Event('input'));
+      toast('已粘贴');
+    } catch (e) {
+      toast('浏览器不允许自动读取剪贴板，请手动粘贴（Ctrl+V）', 2600);
+      input.focus();
+    }
+  });
+
+  /* ---------- 提取 ---------- */
+  goBtn.addEventListener('click', async function () {
+    var text = input.value.trim();
+    if (!text) { toast('先粘贴分享链接'); input.focus(); return; }
+    setLoading(true);
+    try {
+      var res = await fetch('/api/parse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url: text, device: 'web' })
+      });
+      var data = await res.json();
+      if (data.code !== 0) { toast(data.msg || '解析失败', 2600); return; }
+      current = data.data;
+      render(current);
+      saveHistory(current);
+    } catch (e) {
+      toast('网络异常，检查后端是否在运行', 2600);
+    } finally {
+      setLoading(false);
+    }
+  });
+
+  function setLoading(on) {
+    goBtn.disabled = on;
+    goBtn.innerHTML = on
+      ? '<span class="spinner"></span><span>正在读取原片…</span>'
+      : '<span>开始提取</span>';
+  }
+
+  /* ---------- 渲染 ---------- */
+  function render(d) {
+    var isImages = d.kind === 'images';
+    var mediaHtml = isImages
+      ? '<div class="gallery">' + d.images.map(function (u) {
+          return '<img src="' + esc(u) + '" alt="" loading="lazy">';
+        }).join('') + '</div>'
+      : '<div class="media"><video controls playsinline preload="metadata" src="' +
+        esc(d.download.video) + '" poster="' + esc(d.cover) + '"></video>' +
+        '<div class="badge">无水印</div></div>';
+
+    var dlButtons = '';
+    if (!isImages) {
+      dlButtons += '<a class="btn primary" href="' + esc(withDownload(d.download.video)) +
+        '" download="' + esc((d.title || 'douyin').slice(0, 40)) + '.mp4">⬇ 下载视频（无水印）</a>';
+    } else {
+      dlButtons += '<button class="btn primary" id="dlAll">⬇ 下载全部图片（' + d.images.length + ' 张）</button>';
+    }
+    dlButtons += '<div class="dl-row">' +
+      '<a class="btn soft" href="' + esc(withDownload(d.download.cover)) + '" download>封面</a>' +
+      (d.download.music ? '<a class="btn soft" href="' + esc(withDownload(d.download.music)) + '" download>原声</a>' : '') +
+      '<button class="btn soft" id="copyText">复制文案</button>' +
+      '</div>';
+
+    var iosNote = isIOS && !isImages
+      ? '<div class="note">iPhone 上点「下载视频」会打开播放器，长按画面选择「存储到照片」即可保存。</div>'
+      : '';
+
+    resultEl.innerHTML =
+      mediaHtml +
+      '<div class="info">' +
+        '<div class="title">' + esc(d.title || '无标题作品') + '</div>' +
+        '<div class="meta">' +
+          '<span class="chip">' + (isImages ? '图集' : '视频') + '</span>' +
+          (isImages ? '' : '<span class="chip">' + fmtDur(d.duration) + '</span>') +
+          (d.width ? '<span class="chip">' + d.width + '×' + d.height + '</span>' : '') +
+          '<span class="chip">赞 ' + fmtNum(d.stats && d.stats.digg) + '</span>' +
+        '</div>' +
+        ((d.author && d.author.name) ? '<div class="author"><img class="avatar" src="' + esc(d.author.avatar || '') +
+          '" alt=""><span>' + esc(d.author.name) + '</span></div>' : '') +
+      '</div>' +
+      '<div class="dl">' + dlButtons + '</div>' + iosNote;
+
+    resultEl.classList.remove('hidden');
+    resultEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    var copyBtn = $('copyText');
+    if (copyBtn) copyBtn.addEventListener('click', function () {
+      navigator.clipboard.writeText(d.title || '').then(function () { toast('文案已复制'); });
+    });
+
+    var dlAll = $('dlAll');
+    if (dlAll) dlAll.addEventListener('click', function () {
+      d.images.forEach(function (u, i) {
+        setTimeout(function () {
+          var a = document.createElement('a');
+          a.href = withDownload(d.download.images[i]);
+          a.download = 'image-' + (i + 1) + '.jpg';
+          document.body.appendChild(a);
+          a.click();
+          a.remove();
+        }, i * 350);
+      });
+      toast('开始下载 ' + d.images.length + ' 张');
+    });
+  }
+
+  /* ---------- 历史 ---------- */
+  function readHis() {
+    try { return JSON.parse(localStorage.getItem('dy_history') || '[]'); } catch (e) { return []; }
+  }
+  function saveHistory(d) {
+    var list = readHis().filter(function (x) { return x.id !== d.id; });
+    list.unshift({ id: d.id, title: d.title, cover: d.cover, kind: d.kind });
+    localStorage.setItem('dy_history', JSON.stringify(list.slice(0, 12)));
+    renderHis();
+  }
+  function renderHis() {
+    var list = readHis();
+    hisEl.classList.toggle('hidden', !list.length);
+    hlistEl.innerHTML = list.map(function (x) {
+      return '<div class="hitem" data-id="' + esc(x.id) + '">' +
+        '<img src="' + esc(x.cover) + '" alt="" loading="lazy">' +
+        '<p>' + esc(x.title || '无标题') + '</p></div>';
+    }).join('');
+  }
+  hlistEl.addEventListener('click', function (e) {
+    var item = e.target.closest('.hitem');
+    if (!item) return;
+    input.value = 'https://www.douyin.com/video/' + item.dataset.id;
+    input.dispatchEvent(new Event('input'));
+    goBtn.click();
+  });
+  $('clearHis').addEventListener('click', function () {
+    localStorage.removeItem('dy_history');
+    renderHis();
+  });
+
+  renderHis();
+})();
+</script>
+</body>
+</html>

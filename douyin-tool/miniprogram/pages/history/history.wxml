@@ -1,0 +1,33 @@
+<view class="page">
+  <view class="nav" style="padding-top:{{navTop}}px">
+    <view class="nav-back" bindtap="onBack"><view class="ic ic-back"></view></view>
+    <view class="nav-title">提取记录</view>
+    <view class="nav-action" wx:if="{{list.length}}" bindtap="onClear">清空</view>
+    <view class="nav-space" wx:else></view>
+  </view>
+
+  <view class="list" wx:if="{{list.length}}">
+    <view class="item card" wx:for="{{list}}" wx:key="id" data-id="{{item.id}}" bindtap="onOpen" bindlongpress="onRemove">
+      <image class="cover" src="{{item.cover}}" mode="aspectFill" lazy-load />
+      <view class="body">
+        <view class="title ellipsis-2">{{item.title || '无标题作品'}}</view>
+        <view class="sub">
+          <text>{{item.author || '抖音用户'}}</text>
+          <text class="dot">·</text>
+          <text>{{item.kindText}}</text>
+        </view>
+        <view class="time">{{item.timeText}}</view>
+      </view>
+      <view class="ic ic-arrow-m arrow"></view>
+    </view>
+  </view>
+
+  <view class="empty" wx:else>
+    <view class="empty-icon"><view class="ic ic-clock-m"></view></view>
+    <view class="empty-title">还没有提取记录</view>
+    <view class="empty-desc">回首页粘贴一条抖音链接试试</view>
+    <view class="btn btn-primary" bindtap="goHome">去提取</view>
+  </view>
+
+  <view class="tip" wx:if="{{list.length}}">长按任意一条可以删除</view>
+</view>

@@ -1,0 +1,45 @@
+<view class="page">
+  <view class="nav" style="padding-top:{{navTop}}px">
+    <view class="nav-back" bindtap="onBack"><view class="ic ic-back"></view></view>
+    <view class="nav-title">{{tab === 'disclaimer' ? '免责声明' : '使用帮助'}}</view>
+    <view class="nav-space"></view>
+  </view>
+
+  <block wx:if="{{tab !== 'disclaimer'}}">
+    <view class="block card">
+      <view class="block-title">怎么用</view>
+      <view class="step" wx:for="{{steps}}" wx:key="n">
+        <view class="step-n">{{item.n}}</view>
+        <view class="step-body">
+          <view class="step-name">{{item.title}}</view>
+          <view class="step-desc">{{item.desc}}</view>
+        </view>
+      </view>
+    </view>
+
+    <view class="block card">
+      <view class="block-title">常见问题</view>
+      <view class="faq" wx:for="{{faqs}}" wx:key="q" data-index="{{index}}" bindtap="toggleFaq">
+        <view class="faq-q">
+          <text>{{item.q}}</text>
+          <text class="faq-arrow">{{item.open ? '−' : '+'}}</text>
+        </view>
+        <view class="faq-a" wx:if="{{item.open}}">{{item.a}}</view>
+      </view>
+    </view>
+  </block>
+
+  <view class="block card" wx:else>
+    <view class="legal">
+      <view class="legal-p">{{disclaimer}}</view>
+      <view class="legal-h">一、工具性质</view>
+      <view class="legal-p">本小程序只做链接解析与文件下载，不存储、不二次分发任何视频内容。所有视频版权归原作者及平台所有。</view>
+      <view class="legal-h">二、使用范围</view>
+      <view class="legal-p">请仅将提取的内容用于个人学习、离线观看与个人备份。禁止用于商业用途、二次上传、搬运涨粉等侵犯他人著作权的行为。</view>
+      <view class="legal-h">三、责任说明</view>
+      <view class="legal-p">因使用者不当使用产生的版权纠纷、平台处罚等后果，由使用者自行承担。如权利人认为内容侵权，可通过反馈入口联系我们处理。</view>
+      <view class="legal-h">四、数据说明</view>
+      <view class="legal-p">小程序不获取你的微信昵称、头像与手机号，仅在本机保存提取记录；为统计服务可用性，服务端会记录匿名设备标识与解析结果。</view>
+    </view>
+  </view>
+</view>

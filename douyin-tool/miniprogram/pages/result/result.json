@@ -1,0 +1,5 @@
+{
+  "usingComponents": {
+    "ad-banner": "/components/ad-banner/index"
+  }
+}

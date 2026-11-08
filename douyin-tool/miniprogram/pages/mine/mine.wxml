@@ -1,0 +1,73 @@
+<view class="page">
+  <view class="nav" style="padding-top:{{navTop}}px">
+    <view class="nav-back" bindtap="onBack"><view class="ic ic-back"></view></view>
+    <view class="nav-title">我的</view>
+    <view class="nav-space"></view>
+  </view>
+
+  <!-- 额度卡 -->
+  <view class="quota-card">
+    <view class="q-glow"></view>
+    <view class="q-top">
+      <view class="q-main">
+        <view class="q-num">{{quota.remain}}</view>
+        <view class="q-label">今日剩余次数</view>
+      </view>
+      <view class="q-btn {{quota.canWatchAd ? '' : 'off'}}" bindtap="onWatchAd">
+        <view class="ic {{quota.canWatchAd ? 'ic-play-b' : 'ic-play-m'}} q-play"></view>
+        <text>{{quota.canWatchAd ? '看视频 +' + adOnce : '广告次数已用完'}}</text>
+      </view>
+    </view>
+
+    <view class="q-bar">
+      <view class="q-bar-in" style="width:{{freePercent}}%"></view>
+    </view>
+
+    <view class="q-foot">
+      <text>免费 {{quota.freeUsed}}/{{quota.freeTotal}} 次已用</text>
+      <text class="q-dot">·</text>
+      <text wx:if="{{quota.bonus > 0}}">广告加成 +{{quota.bonus}}</text>
+      <text wx:else>已提取 {{totalCount}} 条</text>
+    </view>
+  </view>
+
+  <!-- 菜单 -->
+  <view class="menu card">
+    <view class="menu-item" bindtap="goHelp">
+      <view class="mi-icon"><view class="ic ic-help"></view></view>
+      <text class="mi-text">使用帮助</text>
+      <view class="ic ic-arrow-m mi-arrow"></view>
+    </view>
+    <view class="menu-item" bindtap="onFeedback">
+      <view class="mi-icon"><view class="ic ic-feedback"></view></view>
+      <text class="mi-text">意见反馈</text>
+      <view class="ic ic-arrow-m mi-arrow"></view>
+    </view>
+    <view class="menu-item" wx:if="{{serviceWechat}}" bindtap="onCopyWechat">
+      <view class="mi-icon"><view class="ic ic-headset"></view></view>
+      <text class="mi-text">联系客服</text>
+      <text class="mi-extra">{{serviceWechat}}</text>
+      <view class="ic ic-arrow-m mi-arrow"></view>
+    </view>
+    <view class="menu-item" bindtap="goDisclaimer">
+      <view class="mi-icon"><view class="ic ic-doc"></view></view>
+      <text class="mi-text">免责声明</text>
+      <view class="ic ic-arrow-m mi-arrow"></view>
+    </view>
+    <view class="menu-item" bindtap="onClearCache">
+      <view class="mi-icon"><view class="ic ic-trash"></view></view>
+      <text class="mi-text">清理本地缓存</text>
+      <view class="ic ic-arrow-m mi-arrow"></view>
+    </view>
+  </view>
+
+  <ad-banner gap="16" />
+
+  <view class="about">
+    <view class="brand-line">
+      <view class="ic ic-sparkle-m tiny"></view>
+      <text>短视频提取 v{{version}}</text>
+    </view>
+    <view class="about-line">仅供个人学习备份使用</view>
+  </view>
+</view>

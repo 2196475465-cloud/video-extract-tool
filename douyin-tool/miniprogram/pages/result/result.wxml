@@ -1,0 +1,117 @@
+<view class="page" wx:if="{{item}}">
+  <!-- 导航 -->
+  <view class="nav" style="padding-top:{{navTop}}px">
+    <view class="nav-back" bindtap="onBack"><view class="ic ic-back"></view></view>
+    <view class="nav-title">提取结果</view>
+    <view class="nav-space"></view>
+  </view>
+
+  <!-- 预览 -->
+  <view class="preview">
+    <block wx:if="{{item.kind === 'video'}}">
+      <video
+        class="player"
+        id="player"
+        src="{{item.download.video}}"
+        poster="{{item.cover}}"
+        controls
+        show-center-play-btn
+        object-fit="contain"
+        enable-progress-gesture
+        bindplay="onPlay"
+      ></video>
+    </block>
+    <block wx:else>
+      <swiper class="gallery" indicator-dots circular indicator-color="rgba(255,255,255,.4)" indicator-active-color="#ffffff">
+        <swiper-item wx:for="{{item.images}}" wx:key="*this">
+          <image class="gallery-img" src="{{item}}" mode="aspectFit" bindtap="previewImage" data-src="{{item}}" />
+        </swiper-item>
+      </swiper>
+    </block>
+    <view class="badge-nowm">
+      <view class="badge-dot"></view>
+      <text>{{item.kind === 'images' ? '图集 ' + item.images.length + 'P' : '无水印'}}</text>
+    </view>
+  </view>
+
+  <!-- 信息 -->
+  <view class="info card">
+    <view class="title ellipsis-2">{{item.title || '无标题作品'}}</view>
+
+    <view class="chips">
+      <view class="chip">
+        <view class="ic ic-{{item.kind === 'images' ? 'image' : 'video'}}-m chip-ic"></view>
+        <text>{{item.kind === 'images' ? '图集' : '视频'}}</text>
+      </view>
+      <view class="chip" wx:if="{{item.kind === 'video'}}">
+        <view class="ic ic-clock-m chip-ic"></view>
+        <text>{{durText}}</text>
+      </view>
+      <view class="chip" wx:if="{{item.width}}">{{item.width}}×{{item.height}}</view>
+      <view class="chip">赞 {{diggText}}</view>
+    </view>
+
+    <view class="author-row">
+      <image class="avatar" src="{{item.author.avatar}}" mode="aspectFill" wx:if="{{item.author.avatar}}" />
+      <text class="author">{{item.author.name || '抖音用户'}}</text>
+      <view class="verified" wx:if="{{item.author.name}}">作者</view>
+    </view>
+  </view>
+
+  <!-- 操作 -->
+  <view class="actions card">
+    <view class="btn btn-primary save-btn {{saving ? 'disabled' : ''}}" bindtap="onSaveMain">
+      <block wx:if="{{saving}}">
+        <view class="spinner"></view>
+        <text>保存中…</text>
+      </block>
+      <block wx:else>
+        <view class="ic ic-download-w save-ic"></view>
+        <text wx:if="{{isPC}}">{{item.kind === 'images' ? '保存图片到电脑' : '下载视频到电脑'}}</text>
+        <text wx:else>{{item.kind === 'images' ? '保存全部图片' : '保存视频到相册'}}</text>
+      </block>
+    </view>
+
+    <view class="hint" wx:if="{{needAd}}">
+      <view class="hint-bar"></view>
+      <text>看一小段短视频即可解锁本次保存，广告收入用来付服务器开销，谢谢支持</text>
+    </view>
+
+    <view class="subs">
+      <view class="sub" bindtap="onSaveCover">
+        <view class="sub-circle"><view class="ic ic-image"></view></view>
+        <text>封面</text>
+      </view>
+      <view class="sub" bindtap="onSaveMusic" wx:if="{{item.download.music}}">
+        <view class="sub-circle"><view class="ic ic-music"></view></view>
+        <text>原声</text>
+      </view>
+      <view class="sub" bindtap="onCopyText">
+        <view class="sub-circle"><view class="ic ic-text"></view></view>
+        <text>文案</text>
+      </view>
+      <button class="sub share-btn" open-type="share">
+        <view class="sub-circle"><view class="ic ic-share"></view></view>
+        <text>分享</text>
+      </button>
+    </view>
+  </view>
+
+  <ad-banner gap="8" />
+
+  <view class="tips">
+    <view class="tips-title">保存不了？</view>
+    <view class="tips-line" wx:if="{{!isPC}}">· 第一次保存记得允许「保存到相册」权限</view>
+    <view class="tips-line" wx:if="{{isPC}}">· 电脑端会弹窗让你选择保存位置</view>
+    <view class="tips-line">· 视频较长时下载会慢一些，不要切走</view>
+    <view class="tips-line">· 请仅用于个人备份，不要二次传播他人作品</view>
+  </view>
+
+  <view class="bottom-space"></view>
+</view>
+
+<view class="empty" wx:else>
+  <view class="empty-icon"><view class="ic ic-video-m"></view></view>
+  <view class="empty-text">没有解析数据</view>
+  <view class="btn btn-ghost empty-btn" bindtap="onBack">返回首页</view>
+</view>

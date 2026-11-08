@@ -1,0 +1,18 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/result/result",
+    "pages/history/history",
+    "pages/mine/mine",
+    "pages/help/help"
+  ],
+  "window": {
+    "navigationStyle": "custom",
+    "backgroundColor": "#F5F6FA",
+    "backgroundTextStyle": "dark",
+    "enablePullDownRefresh": false
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
