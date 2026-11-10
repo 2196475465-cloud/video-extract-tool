@@ -10,6 +10,7 @@ Page({
     freePercent: 0,
     adOnce: 1,
     totalCount: 0,
+    apiBase: '',
     serviceWechat: '',
     version: config.version
   },
@@ -21,7 +22,34 @@ Page({
   onShow() {
     this.refresh()
     const app = getApp().globalData.app || {}
-    this.setData({ serviceWechat: app.service_wechat || '' })
+    this.setData({
+      serviceWechat: app.service_wechat || '',
+      apiBase: store.getApiBase() || getApp().globalData.baseUrl
+    })
+  },
+
+  /** 真机调试换网络时，直接在这里改后端地址，不用重新预览 */
+  onEditApi() {
+    const current = store.getApiBase() || getApp().globalData.baseUrl
+    wx.showModal({
+      title: '服务器地址',
+      editable: true,
+      content: current,
+      placeholderText: 'http://172.20.10.3:8000',
+      success: (r) => {
+        if (!r.confirm) return
+        const val = (r.content || '').trim()
+        if (!val) { wx.showToast({ title: '没填地址', icon: 'none' }); return }
+        if (!/^https?:\/\//.test(val)) {
+          wx.showToast({ title: '要以 http:// 或 https:// 开头', icon: 'none' })
+          return
+        }
+        store.setApiBase(val)
+        this.setData({ apiBase: val })
+        getApp().syncConfig()
+        wx.showToast({ title: '已切换，点提取试试', icon: 'success' })
+      }
+    })
   },
 
   refresh() {

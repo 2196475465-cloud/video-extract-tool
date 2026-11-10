@@ -1,9 +1,13 @@
 /** 与服务端通信 */
 
-const { getDeviceId } = require('./store')
+const { getDeviceId, getApiBase } = require('./store')
 
 function baseUrl() {
+  // 优先用本机存过的地址（真机调试换网络时在「我的」里改）
+  const local = getApiBase()
+  if (local) return local
   const app = getApp()
+  if (app && app.apiBase) return app.apiBase()
   return (app && app.globalData.baseUrl) || ''
 }
 

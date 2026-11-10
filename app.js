@@ -1,9 +1,10 @@
 const config = require('./config')
-const { getDeviceId } = require('./utils/store')
+const { getDeviceId, getApiBase } = require('./utils/store')
 
 App({
   globalData: {
     baseUrl: config.baseUrl,
+    devBaseUrl: config.devBaseUrl || 'http://127.0.0.1:8000',
     adUnits: { ...config.adUnits },
     limits: { free_per_day: config.freePerDay, ad_unlock_per_day: 10, ad_unlock_per_view: 1 },
     app: { notice: '', service_wechat: '', disclaimer: '' },
@@ -45,9 +46,24 @@ App({
     this.syncConfig()
   },
 
+  /** 模拟器走本机回环，真机走局域网地址 */
+  apiBase() {
+    const local = getApiBase()
+    if (local) return local
+    let isDev = false
+    try {
+      const info = wx.getDeviceInfo ? wx.getDeviceInfo() : wx.getSystemInfoSync()
+      isDev = (info.platform || '').toLowerCase() === 'devtools'
+    } catch (e) {
+      isDev = false
+    }
+    return isDev ? this.globalData.devBaseUrl : this.globalData.baseUrl
+  },
+
   syncConfig() {
+    const base = this.apiBase()
     wx.request({
-      url: this.globalData.baseUrl + '/api/config',
+      url: base + '/api/config',
       timeout: 8000,
       success: (res) => {
         const data = res.data && res.data.data

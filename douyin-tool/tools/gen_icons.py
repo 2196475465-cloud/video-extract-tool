@@ -7,7 +7,7 @@
 import base64
 import pathlib
 
-ROOT = pathlib.Path(r"C:/Users/GLX/OneDrive/Desktop/小项目/douyin-tool/miniprogram")
+ROOT = pathlib.Path(r"C:/Users/GLX/OneDrive/Desktop/小项目")
 
 # 24x24 线性图标，描边风格
 ICONS = {

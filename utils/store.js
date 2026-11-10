@@ -1,6 +1,7 @@
 /** 本地存储：设备号、每日额度、历史记录 */
 
 const KEY_DEVICE = 'device_id'
+const KEY_API = 'api_base'
 const KEY_QUOTA = 'quota'
 const KEY_HISTORY = 'history'
 const HISTORY_MAX = 30
@@ -18,6 +19,18 @@ function getDeviceId() {
     wx.setStorageSync(KEY_DEVICE, id)
   }
   return id
+}
+
+/** 服务器地址：本地调试时可临时覆盖 config.js 里的值 */
+function getApiBase() {
+  return wx.getStorageSync(KEY_API) || ''
+}
+
+function setApiBase(url) {
+  const v = (url || '').trim().replace(/\/+$/, '')
+  if (v) wx.setStorageSync(KEY_API, v)
+  else wx.removeStorageSync(KEY_API)
+  return v
 }
 
 function getLimits() {
@@ -123,6 +136,8 @@ function clearHistory() {
 module.exports = {
   todayStr,
   getDeviceId,
+  getApiBase,
+  setApiBase,
   getQuota,
   remain,
   canWatchAd,

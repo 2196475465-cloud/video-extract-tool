@@ -1,6 +1,7 @@
 const api = require('../../utils/api')
 const ad = require('../../utils/ad')
 const fmt = require('../../utils/format')
+const privacy = require('../../utils/privacy')
 
 /** 电脑端（Windows / Mac 微信）没有「相册」，要用保存到磁盘 */
 function isDesktop() {
@@ -87,6 +88,11 @@ Page({
     if (this.data.saving) return
     const item = this.data.item
     if (!item) return
+    const agreed = await privacy.requirePrivacy()
+    if (!agreed) {
+      wx.showToast({ title: '需要同意隐私协议才能保存', icon: 'none' })
+      return
+    }
     const ok = await this.ensureUnlocked()
     if (!ok) return
 
@@ -144,6 +150,8 @@ Page({
   async onSaveCover() {
     const item = this.data.item
     if (!item || !item.download.cover) return
+    const agreed = await privacy.requirePrivacy()
+    if (!agreed) return
     const ok = await this.ensureUnlocked()
     if (!ok) return
     try {
@@ -161,6 +169,8 @@ Page({
   async onSaveMusic() {
     const item = this.data.item
     if (!item || !item.download.music) return
+    const agreed = await privacy.requirePrivacy()
+    if (!agreed) return
     const ok = await this.ensureUnlocked()
     if (!ok) return
     try {

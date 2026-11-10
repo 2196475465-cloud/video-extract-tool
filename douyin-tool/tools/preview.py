@@ -7,7 +7,7 @@ import re
 import subprocess
 import pathlib
 
-ROOT = pathlib.Path(r"C:/Users/GLX/OneDrive/Desktop/小项目/douyin-tool/miniprogram")
+ROOT = pathlib.Path(r"C:/Users/GLX/OneDrive/Desktop/小项目")
 OUT = pathlib.Path(r"C:/Users/GLX/OneDrive/Desktop/小项目/douyin-tool/.shots")
 CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 AVATAR = "https://p3-pc.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-i-0813_c21e313b3bc74aa0ae78e5f84b2722a0.jpeg"

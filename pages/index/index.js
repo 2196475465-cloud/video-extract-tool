@@ -2,6 +2,7 @@ const api = require('../../utils/api')
 const store = require('../../utils/store')
 const ad = require('../../utils/ad')
 const fmt = require('../../utils/format')
+const privacy = require('../../utils/privacy')
 
 const LOADING_TEXTS = ['正在读取作品…', '正在获取原片地址…', '马上就好…']
 
@@ -64,7 +65,12 @@ Page({
     this.setData({ text: '', len: 0 })
   },
 
-  onPaste() {
+  async onPaste() {
+    const agreed = await privacy.requirePrivacy()
+    if (!agreed) {
+      wx.showToast({ title: '需要同意隐私协议才能读取剪贴板', icon: 'none' })
+      return
+    }
     wx.getClipboardData({
       success: (res) => {
         const data = (res.data || '').trim()

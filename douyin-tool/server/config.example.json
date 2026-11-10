@@ -1,0 +1,35 @@
+{
+  "server": {
+    "host": "0.0.0.0",
+    "port": 8000,
+    "public_base": "https://api.yourdomain.com",
+    "admin_token": "改成你自己的后台密码",
+    "secret": "改成随机字符串，用于下载链接签名"
+  },
+  "parse": {
+    "chrome_path": "",
+    "headless": true,
+    "workers": 2,
+    "seed_aid": "7420371100103707913",
+    "cache_ttl": 1800,
+    "timeout": 30
+  },
+  "limits": {
+    "free_per_day": 3,
+    "ad_unlock_per_day": 10,
+    "ad_unlock_per_view": 1,
+    "max_text_len": 600
+  },
+  "ads": {
+    "enabled": true,
+    "rewarded_video": "",
+    "banner": "",
+    "interstitial": ""
+  },
+  "app": {
+    "notice": "",
+    "service_wechat": "",
+    "feedback_enabled": true,
+    "disclaimer": "本工具仅用于个人学习与备份，请勿用于商业传播。视频版权归原作者所有。"
+  }
+}

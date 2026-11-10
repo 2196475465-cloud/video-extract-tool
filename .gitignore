@@ -1,14 +1,30 @@
-# Windows
+# ---------- 小程序 ----------
+node_modules/
+miniprogram_npm/
+
+# ---------- 后端 ----------
+douyin-tool/server/data/
+douyin-tool/server/config.json
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# ---------- 本地调试产物 ----------
+.shots/
+*.mp4
+*.db
+*.log
+
+# ---------- 项目笔记 ----------
+.workbuddy/
+
+# ---------- 系统 ----------
 [Dd]esktop.ini
 Thumbs.db
 $RECYCLE.BIN/
-
-# macOS
 .DS_Store
-.fseventsd
-.Spotlight-V100
-.TemporaryItems
-.Trashes
-
-# Node.js
-node_modules/
+.fseventsd/
+.Spotlight-V100/
+.TemporaryItems/
+.Trashes/

@@ -54,6 +54,12 @@
       <text class="mi-text">免责声明</text>
       <view class="ic ic-arrow-m mi-arrow"></view>
     </view>
+    <view class="menu-item" bindtap="onEditApi">
+      <view class="mi-icon"><view class="ic ic-link"></view></view>
+      <text class="mi-text">服务器地址</text>
+      <text class="mi-extra">{{apiBase}}</text>
+      <view class="ic ic-arrow-m mi-arrow"></view>
+    </view>
     <view class="menu-item" bindtap="onClearCache">
       <view class="mi-icon"><view class="ic ic-trash"></view></view>
       <text class="mi-text">清理本地缓存</text>
