@@ -60,6 +60,32 @@
   .shot img{border-radius:11px;width:100%;aspect-ratio:3/4;object-fit:cover;object-position:top center}
   .shot p{font-size:12.5px;color:var(--sub);text-align:center;padding:9px 0 3px}
 
+  /* 手机演示区 */
+  .demo{display:flex;align-items:center;justify-content:center;gap:48px;padding:34px;background:#fff;
+    border-radius:24px;box-shadow:0 10px 34px rgba(23,26,31,.06)}
+  .phone-frame{flex:none;width:250px;height:520px;border-radius:38px;background:#0d0f14;
+    padding:11px;position:relative;box-shadow:0 24px 60px rgba(20,25,60,.22);margin:0 auto}
+  .phone-frame::before{content:"";position:absolute;top:11px;left:50%;transform:translateX(-50%);
+    width:92px;height:20px;background:#0d0f14;border-radius:0 0 14px 14px;z-index:3}
+  .slides{position:relative;width:100%;height:100%;border-radius:28px;overflow:hidden;background:#F2F4F9}
+  .slides .s{position:absolute;top:0;left:0;width:100%;height:100%;
+    background-repeat:no-repeat;background-size:cover;background-position:top center;
+    opacity:0;animation:cyc 12s infinite}
+  .slides .s:nth-child(1){animation-delay:0s}
+  .slides .s:nth-child(2){animation-delay:4s}
+  .slides .s:nth-child(3){animation-delay:8s}
+  @keyframes cyc{
+    0%{opacity:0} 3%{opacity:1} 30%{opacity:1} 33%{opacity:0} 100%{opacity:0}
+  }
+  .dsteps{flex:0 1 430px;min-width:0}
+  .dstep{display:flex;gap:16px;padding:18px 0;border-bottom:1px dashed var(--line)}
+  .dstep:last-child{border-bottom:none}
+  .dstep b{flex:none;width:34px;height:34px;border-radius:11px;background:rgba(78,110,242,.09);
+    color:var(--brand);display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700}
+  .dstep strong{display:block;font-size:15px;margin-bottom:4px}
+  .dstep span{font-size:13.5px;color:var(--sub);line-height:1.7}
+
   /* 能力 */
   .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
   .item{background:#fff;border-radius:16px;padding:24px;box-shadow:0 8px 26px rgba(23,26,31,.05)}
@@ -96,6 +122,7 @@
   @media(max-width:820px){
     .shots{grid-template-columns:repeat(2,1fr)}
     .grid3{grid-template-columns:1fr}
+    .demo{flex-direction:column;gap:26px;padding:22px}
     .stats{grid-template-columns:repeat(2,1fr)}
     h1{font-size:32px}
     h2{font-size:22px}
@@ -137,6 +164,37 @@
     <div class="shot"><img src="images/result.png" alt="结果页"><p>结果页 · 预览与保存</p></div>
     <div class="shot"><img src="images/mine.png" alt="我的"><p>我的 · 额度与设置</p></div>
     <div class="shot"><img src="images/web.png" alt="网页版"><p>网页版 · 电脑端</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-head">
+    <span class="sec-tag">流程</span>
+    <h2>三步，十秒完成</h2>
+    <p class="sec-sub">左边是自动轮播的真实界面，右边是操作步骤</p>
+  </div>
+  <div class="demo">
+    <div class="phone-frame">
+      <div class="slides">
+        <div class="s" style="background-image:url('images/home.png')"></div>
+        <div class="s" style="background-image:url('images/result.png')"></div>
+        <div class="s" style="background-image:url('images/mine.png')"></div>
+      </div>
+    </div>
+    <div class="dsteps">
+      <div class="dstep">
+        <b>01</b>
+        <div><strong>复制链接</strong><span>抖音播放页点「分享」，选「复制链接」，整段文案一起复制更稳</span></div>
+      </div>
+      <div class="dstep">
+        <b>02</b>
+        <div><strong>粘贴提取</strong><span>点「一键粘贴」自动填进输入框，点「开始提取」，通常 0.3 秒出结果</span></div>
+      </div>
+      <div class="dstep">
+        <b>03</b>
+        <div><strong>保存原片</strong><span>手机点保存直接进相册；电脑上弹「另存为」，可以自己选文件夹</span></div>
+      </div>
+    </div>
   </div>
 </section>
 
