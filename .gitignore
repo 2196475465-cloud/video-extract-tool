@@ -28,3 +28,6 @@ $RECYCLE.BIN/
 .Spotlight-V100/
 .TemporaryItems/
 .Trashes/
+
+# 本地上传脚本
+一键上传.bat
